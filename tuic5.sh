@@ -48,3 +48,18 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 systemctl status tuic
+<<EOF
+  - name: ""
+    server: 
+    port: 
+    type: tuic
+    uuid: 
+    password: RiLuoWuHai
+    sni: bing.com
+    alpn:
+    - h3
+    request-timeout: 8000
+    udp-relay-mode: native
+    skip-cert-verify: true
+    congestion-controller: bbr
+EOF
