@@ -9,6 +9,7 @@ fi
 echo "脚本以 root 身份运行。"
 bash <(curl -fsSL https://get.hy2.sh/)
 read -p "input your server port: " port
+openssl req -x509 -nodes -newkey ec:<(openssl ecparam -name prime256v1) -keyout /etc/hysteria/server.key -out /etc/hysteria/server.crt -subj "/CN=bing.com" -days 36500 
 cat <<EOF > /etc/hysteria/config.yaml
 listen: :$port #监听端口
 tls:
