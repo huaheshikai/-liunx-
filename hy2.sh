@@ -53,6 +53,8 @@ resolver:
     sni: cloudflare-dns.com
     insecure: false
 EOF
+systemctl start hysteria-server.service
+systemctl status hysteria-server.service
 cat <<EOF
   - name:  "hysteria2"
     type: hysteria2
