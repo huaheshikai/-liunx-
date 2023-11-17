@@ -6,7 +6,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 mkdir -p /opt/tuic
-wget https://github.com/EAimTY/tuic/releases/download/tuic-server-1.0.0/tuic-server-1.0.0-x86_64-unknown-linux-gnu -O /opt/tuic/tuic-server
+wget https://github.riluowuhai.eu.org/https://github.com/EAimTY/tuic/releases/download/tuic-server-1.0.0/tuic-server-1.0.0-x86_64-unknown-linux-gnu -O /opt/tuic/tuic-server
 chmod +x /opt/tuic/tuic-server
 read -p "请输入端口号：" port
 read -p "输入uuid: "    uuid
@@ -54,9 +54,9 @@ systemctl status tuic
 <<EOF
   - name: ""
     server: 
-    port: 
+    port: $port
     type: tuic
-    uuid: 
+    uuid: $uuid
     password: RiLuoWuHai
     sni: bing.com
     alpn:
