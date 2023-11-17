@@ -7,7 +7,7 @@ fi
 
 # 在这里可以放置需要以 root 权限执行的命令
 echo "脚本以 root 身份运行。"
-bash <(curl -fsSL https://get.hy2.sh/)
+bash <(curl -fsSL https://github.riluowuhai.eu.org/https://raw.githubusercontent.com/huaheshikai/-liunx-/main/install_server.sh)
 read -p "input your server name: " server
 read -p "input your server port: " port
 openssl req -x509 -nodes -newkey ec:<(openssl ecparam -name prime256v1) -keyout /etc/hysteria/server.key -out /etc/hysteria/server.crt -subj "/CN=bing.com" -days 36500 
