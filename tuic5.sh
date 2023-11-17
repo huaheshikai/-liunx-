@@ -30,3 +30,21 @@ cat <<EOF > /opt/tuic/config.json
     "log_level": "warn"
 }
 EOF
+cat <<EOF > /lib/systemd/system/tuic.service
+[Unit]
+Description=Delicately-TUICed high-performance proxy built on top of the QUIC protocol
+Documentation=https://github.com/EAimTY/tuic
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/opt/tuic
+ExecStart=/opt/tuic/tuic-server -c config.json
+Restart=on-failure
+RestartPreventExitStatus=1
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl status tuic
