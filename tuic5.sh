@@ -10,6 +10,7 @@ wget https://github.com/EAimTY/tuic/releases/download/tuic-server-1.0.0/tuic-ser
 chmod +x /opt/tuic/tuic-server
 read -p "请输入端口号：" port
 openssl req -x509 -nodes -newkey ec:<(openssl ecparam -name prime256v1) -keyout /opt/tuic/server.key -out /opt/tuic/server.crt -subj "/CN=bing.com" -days 36500 
+chmod 755 /opt/tuic/server.key && chmod 755 /opt/tuic/server.crt
 cat <<EOF > /opt/tuic/config.json
 {
     "server": "[::]:$port",
