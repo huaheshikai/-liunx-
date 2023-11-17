@@ -4,6 +4,7 @@ if [ "$EUID" -ne 0 ]; then
     echo "请以 root 身份运行此脚本。"
     exit 1
 fi
+
 mkdir -p /opt/tuic
 wget https://github.com/EAimTY/tuic/releases/download/tuic-server-1.0.0/tuic-server-1.0.0-x86_64-unknown-linux-gnu -O /opt/tuic/tuic-server
 chmod +x /opt/tuic/tuic-server
