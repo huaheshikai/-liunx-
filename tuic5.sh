@@ -4,12 +4,13 @@ if [ "$EUID" -ne 0 ]; then
     echo "请以 root 身份运行此脚本。"
     exit 1
 fi
-
+apt install uuidgen
 mkdir -p /opt/tuic
 wget https://github.riluowuhai.eu.org/https://github.com/EAimTY/tuic/releases/download/tuic-server-1.0.0/tuic-server-1.0.0-x86_64-unknown-linux-gnu -O /opt/tuic/tuic-server
 chmod +x /opt/tuic/tuic-server
 read -p "请输入端口号：" port
-read -p "输入uuid: "    uuid
+# 生成UUID并存储到变量
+uuid=$(uuidgen)
 openssl req -x509 -nodes -newkey ec:<(openssl ecparam -name prime256v1) -keyout /opt/tuic/server.key -out /opt/tuic/server.crt -subj "/CN=bing.com" -days 36500 
 chmod 755 /opt/tuic/server.key && chmod 755 /opt/tuic/server.crt
 cat <<EOF > /opt/tuic/config.json
