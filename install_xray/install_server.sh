@@ -30,7 +30,7 @@ SYSTEMD_SERVICES_DIR="/etc/systemd/system"
 CONFIG_DIR="/etc/hysteria"
 
 # URLs of GitHub
-REPO_URL="https://github.riluowuhai.eu.org/https://github.com/apernet/hysteria"
+REPO_URL="https://gh.321122.xyz/https://github.com/apernet/hysteria"
 
 # URL of Hysteria 2 API
 HY2_API_BASE_URL="https://api.hy2.io/v1"
