@@ -62,7 +62,7 @@ export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrast
 print_info "检测到最新的 ros-apt-source 版本为: ${ROS_APT_SOURCE_VERSION}"
 
 # 下载对应版本的 ros2-apt-source deb 包，该包会自动为系统配置好 ROS 2 的 APT 源
-curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}})_all.deb"
+curl -L -o /tmp/ros2-apt-source.deb "https://gh.321122.xyz/github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}})_all.deb"
 
 # 使用 dpkg 安装下载的 deb 包
 sudo dpkg -i /tmp/ros2-apt-source.deb
@@ -108,7 +108,7 @@ fi
 # 注意：这部分命令需要在 fish 环境下执行。
 # 我们使用 `fish -c "..."` 的方式来确保命令在临时的 fish 进程中运行。
 print_info "正在为 Fish 安装插件管理器 Fisher 和 Bass 插件..."
-fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+fish -c "curl -sL https://gh.321122.xyz/raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
 fish -c "fisher install edc/bass"
 print_info "Fisher 和 Bass 插件安装完成。"
 
