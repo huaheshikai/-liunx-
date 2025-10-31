@@ -84,22 +84,7 @@ sudo apt install ros-dev-tools ros-humble-desktop -y
 print_info "ROS 2 Humble Desktop 安装完成。"
 
 
-# === 5. 配置 ROS 2 环境 ===
-print_info "配置 ROS 2 环境，使其自动加载..."
-# `source` 命令只对当前终端生效。为了让新打开的终端也能自动加载 ROS 2 环境，
-# 我们需要将 source 命令写入 shell 的配置文件（例如 ~/.bashrc）。
-SETUP_LINE="source /opt/ros/humble/setup.bash"
-BASHRC_FILE="$HOME/.bashrc"
-
-if ! grep -Fxq "$SETUP_LINE" "$BASHRC_FILE"; then
-    echo "$SETUP_LINE" >> "$BASHRC_FILE"
-    print_info "已将 ROS 2 环境配置写入 ~/.bashrc 文件。"
-else
-    print_warning "~/.bashrc 中已存在 ROS 2 环境配置，跳过此步。"
-fi
-
-
-# === 6. 安装额外的 ROS 2 功能包 (Nav2, SLAM, TurtleBot3) ===
+# ===5. 安装额外的 ROS 2 功能包 (Nav2, SLAM, TurtleBot3) ===
 print_info "安装额外的 ROS 2 功能包..."
 # 安装 Nav2 核心包和启动文件
 sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup -y
@@ -110,7 +95,7 @@ sudo apt install ros-humble-slam-toolbox -y
 print_info "Nav2, SLAM Toolbox 和 TurtleBot3 功能包安装完成。"
 
 
-# === 7. 完成 ===
+# === 6. 完成 ===
 print_success "所有安装和配置步骤已成功完成！"
 echo ""
 echo "重要提示："
