@@ -38,7 +38,7 @@ print_info "开始配置 APT 软件源为中科大镜像..."
 # 备份原始的 sources.list 文件，以防需要恢复
 sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak
 # 从 repogen (USTC 源) 下载为 Ubuntu 22.04 (Jammy) 准备的源列表文件
-sudo curl -o /etc/apt/sources.list https://mirrors.ustc.edu.cn/repogen/conf/ubuntu-https-4-jammy
+sudo wget -O /etc/apt/sources.list https://mirrors.ustc.edu.cn/repogen/conf/ubuntu-https-4-jammy
 print_info "APT 源配置完成。"
 
 
