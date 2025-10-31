@@ -94,13 +94,77 @@ sudo apt install ros-humble-turtlebot3-* -y
 sudo apt install ros-humble-slam-toolbox -y
 print_info "Nav2, SLAM Toolbox 和 TurtleBot3 功能包安装完成。"
 
+# === 6. 安装 Fish Shell ===
+print_info "正在安装 Fish Shell..."
+if command -v fish &> /dev/null; then
+    print_warning "Fish 已经安装，跳过此步骤。"
+else
+    sudo apt update
+    sudo apt install fish -y
+    print_info "Fish Shell 安装完成。"
+fi
 
-# === 6. 完成 ===
-print_success "所有安装和配置步骤已成功完成！"
-echo ""
+# === 7. 安装 Fisher 和 Bass 插件 ===
+# 注意：这部分命令需要在 fish 环境下执行。
+# 我们使用 `fish -c "..."` 的方式来确保命令在临时的 fish 进程中运行。
+print_info "正在为 Fish 安装插件管理器 Fisher 和 Bass 插件..."
+fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+fish -c "fisher install edc/bass"
+print_info "Fisher 和 Bass 插件安装完成。"
+
+
+# === 8. 配置 Fish 以加载 ROS 2 环境 ===
+print_info "正在配置 Fish 以自动加载 ROS 2 Humble 环境..."
+
+# 定义 fish 的配置文件路径和要添加的配置内容
+FISH_CONFIG_FILE="$HOME/.config/fish/config.fish"
+ROS_SETUP_COMMAND="if test -f /opt/ros/humble/setup.bash\n    bass source /opt/ros/humble/setup.bash\nend"
+
+# 创建配置文件目录（如果它不存在）
+mkdir -p "$(dirname "$FISH_CONFIG_FILE")"
+
+# 检查配置是否已经存在，避免重复添加
+if grep -q "bass source /opt/ros/humble/setup.bash" "$FISH_CONFIG_FILE" 2>/dev/null; then
+    print_warning "ROS 2 环境配置已存在于 $FISH_CONFIG_FILE，跳过此步骤。"
+else
+    # 将配置内容追加到文件末尾
+    echo -e "\n# Auto-added by script: Source ROS 2 Humble environment" >> "$FISH_CONFIG_FILE"
+    echo -e "$ROS_SETUP_COMMAND" >> "$FISH_CONFIG_FILE"
+    print_info "已将 ROS 2 环境配置写入 $FISH_CONFIG_FILE。"
+fi
+
+
+# === 9. 将 Fish 设置为默认 Shell ===
+print_info "正在将 Fish 设置为当前用户的默认 Shell..."
+
+# 获取 fish 的可执行文件路径
+FISH_PATH=$(which fish)
+
+# 步骤 10: 确保 fish 在 /etc/shells 白名单中
+if ! grep -Fxq "$FISH_PATH" /etc/shells; then
+    print_info "将 $FISH_PATH 添加到 /etc/shells..."
+    echo "$FISH_PATH" | sudo tee -a /etc/shells
+else
+    print_warning "$FISH_PATH 已经存在于 /etc/shells。"
+fi
+
+# 步骤 11: 使用 chsh 更改默认 Shell
+if [ "$SHELL" != "$FISH_PATH" ]; then
+    # chsh 命令需要交互式输入密码，这里我们直接执行它
+    # 注意：chsh -s "$FISH_PATH" 通常会要求输入密码，这是正常的。
+    chsh -s "$FISH_PATH"
+    print_info "默认 Shell 已更改为 Fish。"
+else
+    print_warning "默认 Shell 已经是 Fish，无需更改。"
+fi
+
+
+# === 12. 完成 ===
+print_success "Fish Shell 配置成功！"
 echo "重要提示："
-echo "1. 请关闭当前终端，然后打开一个新的终端来使 ROS 2 环境生效。"
-echo "2. 在新终端中，您可以运行以下测试命令来启动 TurtleBot3 仿真和 Nav2："
+echo "1. 请完全注销当前用户并重新登录，或者重启电脑，以使默认 Shell 的更改完全生效。"
+echo "2. 重新登录后，打开终端，您应该会直接进入 Fish Shell。"
+echo "3. 您可以运行 'ros2' 并按下 Tab 键，如果看到 ROS 2 的命令补全，说明环境加载成功。"
+echo "4. 在新终端中，您可以运行以下测试命令来启动 TurtleBot3 仿真和 Nav2："
 echo "   ros2 launch nav2_bringup tb3_simulation_launch.py"
-echo ""
 
