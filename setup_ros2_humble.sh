@@ -45,7 +45,7 @@ print_info "APT 源配置完成。"
 # === 2. 安装系统基础工具 ===
 print_info "安装系统基础工具 (VMware tools, software-properties-common)..."
 # 安装 open-vm-tools，用于改善在 VMware 虚拟机中的体验（如剪贴板共享、屏幕自适应）
-sudo apt install open-vm-tools open-vm-tools-desktop -y
+sudo apt install open-vm-tools open-vm-tools-desktop openssh-server -y
 # 安装 software-properties-common，它提供了 add-apt-repository 命令
 sudo apt install software-properties-common -y
 # 启用 universe 软件源，ROS 2 的某些依赖包可能需要它
