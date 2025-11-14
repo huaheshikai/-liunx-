@@ -103,85 +103,8 @@ sudo apt install ros-humble-turtlebot3-* -y
 sudo apt install ros-humble-slam-toolbox -y
 print_info "Nav2, SLAM Toolbox 和 TurtleBot3 功能包安装完成。"
 
-# === 6. 安装 Fish Shell ===
-print_info "正在安装 Fish Shell..."
-if command -v fish &> /dev/null; then
-    print_warning "Fish 已经安装，跳过此步骤。"
-else
-    sudo apt update
-    sudo apt install fish -y
-    print_info "Fish Shell 安装完成。"
-fi
-
-# --- 关键修正：智能识别目标用户 ---
-if [ -n "$SUDO_USER" ]; then
-    TARGET_USER="$SUDO_USER"
-else
-    TARGET_USER="$USER"
-fi
-
-
-# === 9. 将 Fish 设置为默认 Shell ===
-print_info "正在将 Fish 设置为用户 '$TARGET_USER' 的默认 Shell..."
-
-FISH_PATH=$(which fish)
-
-# (可选但推荐) 确保 fish 在 /etc/shells 白名单中
-if ! grep -Fxq "$FISH_PATH" /etc/shells; then
-    echo "$FISH_PATH" | sudo tee -a /etc/shells
-fi
-
-# 获取目标用户的当前配置 Shell
-CURRENT_CONFIGURED_SHELL=$(getent passwd "$TARGET_USER" | cut -d: -f7)
-
-# 比较并使用 usermod 进行非交互式更改
-if [ "$CURRENT_CONFIGURED_SHELL" != "$FISH_PATH" ]; then
-    print_info "当前默认Shell是 '$CURRENT_CONFIGURED_SHELL'，将为用户 '$TARGET_USER' 更改为 '$FISH_PATH'..."
-    # 使用 usermod 为指定用户更改 shell (需要 sudo)，这是非交互式的
-    sudo usermod -s "$FISH_PATH" "$TARGET_USER"
-    print_info "默认 Shell 已成功更改。"
-else
-    print_warning "用户 '$TARGET_USER' 的默认 Shell 已经是 Fish，无需更改。"
-fi
-
-# === 7. 安装 Fisher 和 Bass 插件 ===
-print_info "正在为用户 '$TARGET_USER' 安装 Fisher 和 Bass 插件..."
-# 使用 sudo -u 来降权，确保插件安装到目标用户的正确目录下
-sudo -u "$TARGET_USER" fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
-sudo -u "$TARGET_USER" fish -c "fisher install edc/bass"
-print_info "Fisher 和 Bass 插件安装完成。"
-
-
-# --- 关键修正：获取目标用户的 HOME 目录 ---
-TARGET_HOME=$(getent passwd "$TARGET_USER" | cut -d: -f6)
-
-# === 8. 配置 Fish 以加载 ROS 2 环境 ===
-print_info "正在配置 Fish 以自动加载 ROS 2 Humble 环境..."
-
-# 使用 TARGET_HOME 来定位正确的配置文件路径
-FISH_CONFIG_FILE="$TARGET_HOME/.config/fish/config.fish"
-ROS_SETUP_COMMAND="if test -f /opt/ros/humble/setup.bash\n    bass source /opt/ros/humble/setup.bash\nend"
-
-# 以目标用户身份创建目录，确保权限正确
-sudo -u "$TARGET_USER" mkdir -p "$(dirname "$FISH_CONFIG_FILE")"
-
-# 以目标用户身份检查和写入文件，避免权限问题
-if sudo -u "$TARGET_USER" grep -q "bass source /opt/ros/humble/setup.bash" "$FISH_CONFIG_FILE" 2>/dev/null; then
-    print_warning "ROS 2 环境配置已存在于 $FISH_CONFIG_FILE，跳过此步骤。"
-else
-    # 构造要追加的内容，并通过 tee -a 以目标用户身份写入，这可以正确处理权限
-    COMMAND_TO_APPEND="\n# Auto-added by script: Source ROS 2 Humble environment\n$ROS_SETUP_COMMAND"
-    echo -e "$COMMAND_TO_APPEND" | sudo -u "$TARGET_USER" tee -a "$FISH_CONFIG_FILE" > /dev/null
-    print_info "已将 ROS 2 环境配置写入 $FISH_CONFIG_FILE。"
-fi
-
-
-# === 12. 完成 ===
-print_success "Fish Shell 配置成功！"
 echo "重要提示："
 echo "1. 请完全注销当前用户并重新登录，或者重启电脑，以使默认 Shell 的更改完全生效。"
-echo "2. 重新登录后，打开终端，您应该会直接进入 Fish Shell。"
-echo "3. 您可以运行 'ros2' 并按下 Tab 键，如果看到 ROS 2 的命令补全，说明环境加载成功。"
-echo "4. 在新终端中，您可以运行以下测试命令来启动 TurtleBot3 仿真和 Nav2："
+echo "2. 重新登录后，打开终端，您应该会直接进入 Shell。"
+echo "3. 在新终端中，您可以运行以下测试命令来启动 TurtleBot3 仿真和 Nav2："
 echo "   ros2 launch nav2_bringup tb3_simulation_launch.py"
-exec fish
