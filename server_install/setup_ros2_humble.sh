@@ -107,8 +107,4 @@ sudo apt install ros-humble-slam-toolbox -y
 echo "source /opt/ros/humble/setup.bash" >>  ~/.bashrc
 print_info "Nav2, SLAM Toolbox 和 TurtleBot3 功能包安装完成。"
 print_info "环境变量加入完成"
-
-echo "重要提示："
-echo "1. 重新登录后，打开终端，您应该会直接进入 Shell。"
-echo "2. 在新终端中，您可以运行以下测试命令来启动 TurtleBot3 仿真和 Nav2："
 echo "   ros2 launch nav2_bringup tb3_simulation_launch.py"
