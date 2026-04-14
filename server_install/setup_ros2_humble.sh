@@ -55,25 +55,25 @@ sudo add-apt-repository universe -y
 
 
 # === 3. 添加 ROS 2 官方源 ===
-print_info "正在添加 ROS 2 官方软件源..."
+# print_info "正在添加 ROS 2 官方软件源..."
 # 首先更新包列表，并确保 curl 已安装，因为后续步骤需要用到
 sudo apt update && sudo apt install curl -y
 
 # 动态获取最新的 ros-apt-source 版本号，避免硬编码
-export ROS_APT_SOURCE_VERSION=$(
-  curl -fsSL "https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest" \
-  | sed -nE 's/.*"tag_name":[[:space:]]*"([^"]+)".*/\1/p'
-)
-print_info "检测到最新的 ros-apt-source 版本为: ${ROS_APT_SOURCE_VERSION}"
+# export ROS_APT_SOURCE_VERSION=$(
+#  curl -fsSL "https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest" \
+#  | sed -nE 's/.*"tag_name":[[:space:]]*"([^"]+)".*/\1/p'
+# )
+# print_info "检测到最新的 ros-apt-source 版本为: ${ROS_APT_SOURCE_VERSION}"
 
 # 下载对应版本的 ros2-apt-source deb 包，该包会自动为系统配置好 ROS 2 的 APT 源
-curl -L -o /tmp/ros2-apt-source.deb "https://gh.321122.xyz/github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}})_all.deb"
+# curl -L -o /tmp/ros2-apt-source.deb "https://gh.321122.xyz/github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}})_all.deb"
 
 # 使用 dpkg 安装下载的 deb 包
-sudo dpkg -i /tmp/ros2-apt-source.deb
+# sudo dpkg -i /tmp/ros2-apt-source.deb
 # 安装后删除临时文件
-rm /tmp/ros2-apt-source.deb
-print_info "ROS 2 软件源添加成功。"
+# rm /tmp/ros2-apt-source.deb
+# print_info "ROS 2 软件源添加成功。"
 
 
 # === 4. 更新系统并安装 ROS 2 ===
