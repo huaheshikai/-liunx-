@@ -104,7 +104,9 @@ sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup -y
 sudo apt install ros-humble-turtlebot3-* -y
 # 安装 SLAM 工具箱
 sudo apt install ros-humble-slam-toolbox -y
+echo "source /opt/ros/humble/setup.bash" >>  ~/.bashrc
 print_info "Nav2, SLAM Toolbox 和 TurtleBot3 功能包安装完成。"
+print_info "环境变量加入完成"
 
 echo "重要提示："
 echo "1. 重新登录后，打开终端，您应该会直接进入 Shell。"
