@@ -80,7 +80,7 @@ sudo apt update && sudo apt install curl -y
 print_info "更新软件包列表并安装 ROS 2 Humble Desktop..."
 # 添加新源后，必须再次更新软件包列表
 # 1. 备份现有ROS源配置
-sudo mv /etc/apt/sources.list.d/ros2.sources /etc/apt/sources.list.d/ros2.bak 2>/dev/null || true
+# sudo mv /etc/apt/sources.list.d/ros2.sources /etc/apt/sources.list.d/ros2.bak 2>/dev/null || true
 
 # 2. 修改ROS源为USTC镜像
 sudo curl -sSL https://gh.321122.xyz/raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
