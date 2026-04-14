@@ -60,7 +60,10 @@ print_info "正在添加 ROS 2 官方软件源..."
 sudo apt update && sudo apt install curl -y
 
 # 动态获取最新的 ros-apt-source 版本号，避免硬编码
-export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}')
+export ROS_APT_SOURCE_VERSION=$(
+  curl -fsSL "https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest" \
+  | sed -nE 's/.*"tag_name":[[:space:]]*"([^"]+)".*/\1/p'
+)
 print_info "检测到最新的 ros-apt-source 版本为: ${ROS_APT_SOURCE_VERSION}"
 
 # 下载对应版本的 ros2-apt-source deb 包，该包会自动为系统配置好 ROS 2 的 APT 源
