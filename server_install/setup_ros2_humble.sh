@@ -136,13 +136,34 @@ install_extra_packages() {
 }
 
 configure_ros_env() {
-    print_info "配置 ROS 2 环境变量。"
+    # 1. 获取实际执行 sudo 的原始用户名
+    # 如果不是用 sudo 运行的，$SUDO_USER 为空，则回退到当前执行用户 $USER
+    local ACTUAL_USER="${SUDO_USER:-$USER}"
+    
+    # 2. 获取该用户的家目录路径
+    # 使用 getent 是获取用户家目录最可靠的方法
+    local ACTUAL_HOME=$(getent passwd "$ACTUAL_USER" | cut -d: -f6)
+    local TARGET_BASHRC="$ACTUAL_HOME/.bashrc"
 
-    if grep -qxF "source /opt/ros/humble/setup.bash" ~/.bashrc; then
-        print_warning "~/.bashrc 中已存在 ROS 2 环境配置，跳过追加。"
+    print_info "正在为用户 $ACTUAL_USER 配置 ROS 2 环境变量 ($TARGET_BASHRC)。"
+
+    # 3. 检查文件是否存在（防止极个别情况用户没有 .bashrc）
+    if [ ! -f "$TARGET_BASHRC" ]; then
+        touch "$TARGET_BASHRC"
+        chown "$ACTUAL_USER:$ACTUAL_USER" "$TARGET_BASHRC"
+    fi
+
+    # 4. 检查并追加配置
+    if grep -qxF "source /opt/ros/humble/setup.bash" "$TARGET_BASHRC"; then
+        print_warning "$TARGET_BASHRC 中已存在 ROS 2 环境配置，跳过追加。"
     else
-        echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
-        print_success "ROS 2 环境变量已写入 ~/.bashrc"
+        # 使用追加模式写入
+        echo "source /opt/ros/humble/setup.bash" >> "$TARGET_BASHRC"
+        
+        # 确保权限仍然属于原始用户，防止 sudo 写入导致文件所有权变成 root
+        # chown "$ACTUAL_USER:$ACTUAL_USER" "$TARGET_BASHRC"
+        
+        print_success "ROS 2 环境变量已写入 $TARGET_BASHRC"
     fi
 }
 
